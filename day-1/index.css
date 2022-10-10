@@ -1,38 +1,103 @@
-.card {
-    width: 400px;
-    margin: 0 auto;
-    padding: 10px;
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background: lightgray;
+}
+
+.container {
+    background: white;
+    width: 500px;
+    margin: 25px auto;
+    padding: 25px 50px;
     box-shadow: 0 0 5px 0 black;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.container .hero-text {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: justify;
+}
+
+.container .btn-group {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    gap: 20px;
+}
+
+.btn-group button {
+    font-family: "Montserrat", sans-serif;
+    border: none;
+    outline: none;
+
+    padding: 10px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 500;
+
+    background: black;
+    color: white;
+
+    cursor: pointer;
+}
+
+.btn-group a {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}
+
+.btn-group a span {
+    margin-left: 10px;
+}
+
+.container .brands-group {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+}
+
+.brands-group .brands-content {
+    background: black;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brands-content i {
+    color: white;
+    font-size: 18px;
+}
+
+.card {
+    width: 300px;
+    box-shadow: 0 0 3px 0 black;
     border-radius: 5px;
 }
 
 .card img {
     width: 100%;
-    border-radius: 5px;
 }
 
-.card h1,
-.card p,
-table {
-    font-family: sans-serif;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table,
-th,
-td {
-    border: 1px solid black;
-}
-
-th,
-td {
-    padding: 5px;
-}
-
-td {
+.card .card-description {
+    padding: 10px;
     text-align: center;
 }
