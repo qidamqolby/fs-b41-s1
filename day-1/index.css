@@ -1,0 +1,38 @@
+.card {
+    width: 400px;
+    margin: 0 auto;
+    padding: 10px;
+    box-shadow: 0 0 5px 0 black;
+    border-radius: 5px;
+}
+
+.card img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.card h1,
+.card p,
+table {
+    font-family: sans-serif;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table,
+th,
+td {
+    border: 1px solid black;
+}
+
+th,
+td {
+    padding: 5px;
+}
+
+td {
+    text-align: center;
+}
