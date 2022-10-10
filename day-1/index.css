@@ -8,96 +8,102 @@
 
 body {
     font-family: "Montserrat", sans-serif;
-    background: lightgray;
+    background: #e3e7eb;
 }
 
-.container {
-    background: white;
-    width: 500px;
-    margin: 25px auto;
-    padding: 25px 50px;
-    box-shadow: 0 0 5px 0 black;
+.hero {
+    background: #fff;
+    max-width: 1280px;
+    margin: 50px auto 0;
+    padding: 50px;
     border-radius: 10px;
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.75);
 
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 30px;
+}
+
+.hero .hero-left {
+    width: 500px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 20px;
 }
 
-.container .hero-text {
+.hero-left .hero-text {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
     text-align: justify;
 }
 
-.container .btn-group {
+.hero-left .hero-btn {
     display: flex;
-    flex-direction: column;
-    align-self: flex-start;
+    flex-direction: row;
+    align-items: center;
     gap: 20px;
 }
 
-.btn-group button {
-    font-family: "Montserrat", sans-serif;
+.hero-btn button {
+    background: #000;
+    padding: 10px 20px;
     border: none;
     outline: none;
-
-    padding: 10px;
     border-radius: 20px;
-    font-size: 16px;
-    font-weight: 500;
 
-    background: black;
-    color: white;
+    color: #fff;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 16px;
 
     cursor: pointer;
 }
 
-.btn-group a {
+.hero-btn a {
     text-decoration: none;
-    color: black;
-    font-weight: 500;
+    color: #000;
 }
 
-.btn-group a span {
+.hero-btn a span {
     margin-left: 10px;
 }
 
-.container .brands-group {
+.hero-left .hero-social {
+    margin: 0 auto;
     display: flex;
     flex-direction: row;
-    gap: 25px;
+    gap: 20px;
 }
 
-.brands-group .brands-content {
-    background: black;
+.hero-social a {
+    background: #000;
     width: 30px;
     height: 30px;
     border-radius: 50%;
+    color: #fff;
+    text-decoration: none;
 
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.brands-content i {
-    color: white;
-    font-size: 18px;
+.hero .profile-card {
+    width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.75);
 }
 
-.card {
-    width: 300px;
-    box-shadow: 0 0 3px 0 black;
-    border-radius: 5px;
-}
-
-.card img {
+.profile-card img {
     width: 100%;
+    border-radius: 10px 10px 0 0;
 }
 
-.card .card-description {
-    padding: 10px;
+.profile-card .profile-detail {
+    padding: 20px;
     text-align: center;
 }
