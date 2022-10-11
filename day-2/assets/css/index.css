@@ -69,7 +69,7 @@ a {
 .navbar {
     background: #fff;
     height: 80px;
-    width: 100vw;
+    width: 100%;
     display: block;
 
     position: absolute;
