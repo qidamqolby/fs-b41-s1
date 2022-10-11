@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Me</title>
+    <link rel="stylesheet" href="./assets/css/contact.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <!-- NAVIGATION -->
+    <header class="navbar">
+        <nav class="nav-menu container">
+            <div class="nav-left">
+                <a href="index.html" class="nav-logo"><img src="./assets/images/logo.png" alt="logo"></a>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">My Project</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <a href="contact.html" class="btn btn-primary">Contact Me</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="contact container">
+            <h2>GET IN TOUCH</h2>
+            <form class="form">
+                <div class="input">
+                    <label for="name-input">Name</label>
+                    <input type="text" id="name-input" required>
+                </div>
+                <div class="input">
+                    <label for="email-input">Email</label>
+                    <input type="email" id="email-input" prequired>
+                </div>
+                <div class="input">
+                    <label for="phone-input">Phone Number</label>
+                    <input type="tel" id="phone-input" required>
+                </div>
+                <div class="input">
+                    <label for="subject-input">Subject</label>
+                    <select id="subject-input">
+                        <option value="" hidden>Select</option>
+                        <option value="">Frontend</option>
+                        <option value="">Backend</option>
+                        <option value="">Fullstack</option>
+                    </select>
+                </div>
+                <div class="input">
+                    <label for="message-input">Your Message</label>
+                    <textarea id="message-input" cols="30" rows="10"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>
