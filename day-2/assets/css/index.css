@@ -10,6 +10,7 @@
 body {
     font-family: "Montserrat", sans-serif;
     background: #e3e7eb;
+    scroll-behavior: smooth;
 }
 
 li {
