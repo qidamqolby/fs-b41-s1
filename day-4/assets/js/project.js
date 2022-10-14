@@ -101,6 +101,7 @@ const createProjectItem = (project) => {
         durationTotal = `${projectDuration} day(s)`;
     }
 
+    // creation date
     let createdDate = date1.getDate();
     let createdMonth = date1.getMonth();
     let createdYear = date1.getFullYear();
@@ -133,7 +134,7 @@ const createProjectItem = (project) => {
     projectArticle.innerHTML = `
     <img src=${uploadImage} alt="">
     <div class="project-name">
-        <a href="project-detail.html"><h3>${projectName}</h3></a>
+        <a href="project-detail.html" target="_blank"><h3>${projectName}</h3></a>
         <div class="project-duration">
             <p>Duration: ${durationTotal}</p>
             <p>Created: ${fullDate}</p>
