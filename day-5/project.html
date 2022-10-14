@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Web</title>
+    <link rel="stylesheet" href="./assets/css/project.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <!-- NAVIGATION -->
+    <header class="navbar">
+        <nav class="nav-menu container">
+            <div class="nav-left">
+                <a href="index.html" class="nav-logo"><img src="./assets/images/logo.png" alt="logo"></a>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="project.html" class="nav-link">My Project</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <a href="contact.html" class="btn btn-primary">Contact Me</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- PROJECT FORM -->
+        <section class="project-form">
+            <h2>Add New Project</h2>
+            <form class="project-input" id="project-input">
+                <div class="input">
+                    <label for="project-name">Project Name</label>
+                    <input type="text" id="project-name" required>
+                </div>
+                <div class="input-row">
+                    <div class="input">
+                        <label for="date-start">Start Date</label>
+                        <input type="date" id="date-start" required>
+                    </div>
+                    <div class="input">
+                        <label for="date-end">End Date</label>
+                        <input type="date" id="date-end" required>
+                    </div>
+                </div>
+                <div class="input">
+                    <label for="project-description">Project Description</label>
+                    <textarea id="project-description" cols="30" rows="10" required></textarea>
+                </div>
+                <div class="input-grid">
+                    <label>Technologies</label>
+                    <div class="input-checkbox">
+                        <label for="node-js">
+                            <input type="checkbox" id="node-js">
+                            Node JS
+                        </label>
+                        <label for="react-js">
+                            <input type="checkbox" id="react-js">
+                            React JS
+                        </label>
+                        <label for="next-js">
+                            <input type="checkbox" id="next-js">
+                            Next JS
+                        </label>
+                        <label for="typescript">
+                            <input type="checkbox" id="typescript">
+                            TypeScript
+                        </label>
+                    </div>
+                </div>
+                <div class="input">
+                    <label for="upload-image">Upload Image</label>
+                    <input type="file" id="upload-image" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </section>
+
+        <!-- PROJECT LIST -->
+        <section class="project container">
+            <h2>My Project</h2>
+            <div class="project-list" id="project-list">
+                <!-- <article class="project-item">
+                    <img src="./assets/images/gambar-1.jpg" alt="">
+                    <div class="project-name">
+                        <h3>Project Name</h3>
+                        <div class="project-duration">
+                            <p><b>Start Date:</b> 10 October 2022</p>
+                            <p><b>End Date:</b> 28 October 2022</p>
+                        </div>
+                    </div>
+                    <div class="project-description">
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Et id nemo voluptatum maxime quia
+                            omnis, voluptatem distinctio animi dolores esse dolore repellendus nostrum natus illo
+                            inventore exercitationem facilis error? Tenetur!
+                        </p>
+                        <div class="project-tech-info">
+                            <img src="./assets/icons/nodejs.svg">
+                            <img src="./assets/icons/react-native.svg">
+                            <img src="./assets/icons/nextjs.svg">
+                            <img src="./assets/icons/typescript.svg">
+                        </div>
+                    </div>
+                    <div class="action-btn">
+                        <button class="btn btn-primary">edit</button>
+                        <button class="btn btn-white">delete</button>
+                    </div>
+                </article> -->
+
+
+            </div>
+        </section>
+    </main>
+
+
+    <script src="./assets/js/project.js"></script>
+</body>
+
+</html>
