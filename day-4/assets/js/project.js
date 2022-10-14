@@ -85,19 +85,62 @@ const createProjectItem = (project) => {
         uploadImage,
     } = project;
 
+    // count duration
+    const date1 = new Date(startDate);
+    const date2 = new Date(endDate);
+    const diffDate = Math.abs(date2 - date1);
+    const projectDuration = Math.ceil(diffDate / (1000 * 3600 * 24));
+
+    let calculateDuration = "";
+    let durationTotal = "";
+
+    if (projectDuration > 30) {
+        calculateDuration = Math.round(projectDuration / 30);
+        durationTotal = `${calculateDuration} month(s)`;
+    } else {
+        durationTotal = `${projectDuration} day(s)`;
+    }
+
+    let createdDate = date1.getDate();
+    let createdMonth = date1.getMonth();
+    let createdYear = date1.getFullYear();
+
+    const arrayMonth = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
+
+    for (let i = 0; i < arrayMonth.length; i++) {
+        if (createdMonth - 1 === i) {
+            createdMonth = arrayMonth[i];
+        }
+    }
+
+    const fullDate = createdDate + " " + createdMonth + " " + createdYear;
+
     const projectArticle = document.createElement("article");
     projectArticle.classList.add("project-item");
     projectArticle.setAttribute("id", `${id}`);
     projectArticle.innerHTML = `
     <img src=${uploadImage} alt="">
     <div class="project-name">
-        <h3>${projectName}</h3>
+        <a href="project-detail.html"><h3>${projectName}</h3></a>
         <div class="project-duration">
-            <p><b>Start Date:</b> ${startDate}</p>
-            <p><b>End Date:</b> ${endDate}</p>
+            <p>Duration: ${durationTotal}</p>
+            <p>Created: ${fullDate}</p>
         </div>
     </div>
     <div class="project-description">
+        <h3>Project Description</h3>
         <p>
             ${projectDesc}
         </p>
@@ -188,4 +231,32 @@ const loadDataFromStorage = () => {
 // generate ID
 const generateID = () => {
     return +new Date();
+};
+
+// delete project
+const deleteProject = (id) => {
+    const projectTarget = findProjectIndex(id);
+
+    if (projectTarget === -1) {
+        return;
+    }
+
+    if (confirm("do you want to delete this project?") === true) {
+        projectlist.splice(projectTarget, 1);
+        document.dispatchEvent(new Event(RENDER_EVENT));
+        saveData();
+        window.location.reload();
+    }
+};
+
+// find project index
+
+const findProjectIndex = (projectId) => {
+    for (const project of projectlist) {
+        if (project.id === projectId) {
+            return project;
+        }
+    }
+
+    return null;
 };
