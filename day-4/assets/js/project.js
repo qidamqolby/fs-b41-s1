@@ -1,4 +1,4 @@
-const projectlist = [];
+const dataProject = [];
 const RENDER_EVENT = "render-project";
 const SAVED_EVENT = "saved-project";
 const STORAGE_KEY = "project-data";
@@ -38,7 +38,6 @@ const addProject = () => {
     const useNextJS = inputUseNextJS.checked;
     const useTypeScript = inputUseTypeScript.checked;
 
-    console.log(inputUploadImage.files);
     const uploadImage = URL.createObjectURL(inputUploadImage.files[0]);
 
     const project = {
@@ -54,7 +53,7 @@ const addProject = () => {
         uploadImage,
     };
 
-    projectlist.push(project);
+    dataProject.push(project);
     document.dispatchEvent(new Event(RENDER_EVENT));
     saveData();
 };
@@ -65,7 +64,7 @@ document.addEventListener(RENDER_EVENT, () => {
 
     listProject.innerHTML = "";
 
-    for (const project of projectlist) {
+    for (const project of dataProject) {
         const projectItem = createProjectItem(project);
         listProject.append(projectItem);
     }
@@ -85,49 +84,6 @@ const createProjectItem = (project) => {
         uploadImage,
     } = project;
 
-    // count duration
-    const date1 = new Date(startDate);
-    const date2 = new Date(endDate);
-    const diffDate = Math.abs(date2 - date1);
-    const projectDuration = Math.ceil(diffDate / (1000 * 3600 * 24));
-
-    let calculateDuration = "";
-    let durationTotal = "";
-
-    if (projectDuration > 30) {
-        calculateDuration = Math.round(projectDuration / 30);
-        durationTotal = `${calculateDuration} month(s)`;
-    } else {
-        durationTotal = `${projectDuration} day(s)`;
-    }
-
-    // creation date
-    let createdDate = date1.getDate();
-    let createdMonth = date1.getMonth();
-    let createdYear = date1.getFullYear();
-
-    const arrayMonth = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-    ];
-
-    for (let i = 0; i < arrayMonth.length; i++) {
-        if (createdMonth - 1 === i) {
-            createdMonth = arrayMonth[i];
-        }
-    }
-
-    const fullDate = createdDate + " " + createdMonth + " " + createdYear;
-
     const projectArticle = document.createElement("article");
     projectArticle.classList.add("project-item");
     projectArticle.setAttribute("id", `${id}`);
@@ -136,8 +92,8 @@ const createProjectItem = (project) => {
     <div class="project-name">
         <a href="project-detail.html" target="_blank"><h3>${projectName}</h3></a>
         <div class="project-duration">
-            <p>Duration: ${durationTotal}</p>
-            <p>Created: ${fullDate}</p>
+            <p>Duration: ${getDurationTime(startDate, endDate)}</p>
+            <p>Created: ${getCreationDate(startDate)}</p>
         </div>
     </div>
     <div class="project-description">
@@ -210,7 +166,7 @@ const isStorageExist = () => {
 
 const saveData = () => {
     if (isStorageExist()) {
-        const parsed = JSON.stringify(projectlist);
+        const parsed = JSON.stringify(dataProject);
         localStorage.setItem(STORAGE_KEY, parsed);
         document.dispatchEvent(new Event(SAVED_EVENT));
     }
@@ -222,7 +178,7 @@ const loadDataFromStorage = () => {
 
     if (data !== null) {
         for (const project of data) {
-            projectlist.push(project);
+            dataProject.push(project);
         }
     }
 
@@ -243,7 +199,7 @@ const deleteProject = (id) => {
     }
 
     if (confirm("do you want to delete this project?") === true) {
-        projectlist.splice(projectTarget, 1);
+        dataProject.splice(projectTarget, 1);
         document.dispatchEvent(new Event(RENDER_EVENT));
         saveData();
         window.location.reload();
@@ -253,11 +209,59 @@ const deleteProject = (id) => {
 // find project index
 
 const findProjectIndex = (projectId) => {
-    for (const project of projectlist) {
+    for (const project of dataProject) {
         if (project.id === projectId) {
             return project;
         }
     }
 
     return null;
+};
+
+const getDurationTime = (startDate, endDate) => {
+    const date1 = new Date(startDate);
+    const date2 = new Date(endDate);
+    const diffDate = Math.abs(date2 - date1);
+    const projectDuration = Math.floor(diffDate / (1000 * 3600 * 24));
+
+    let calculateDuration = "";
+    let durationTotal = "";
+
+    if (projectDuration > 30) {
+        calculateDuration = Math.round(projectDuration / 30);
+        durationTotal = `${calculateDuration} month(s)`;
+    } else {
+        durationTotal = `${projectDuration} day(s)`;
+    }
+    return durationTotal;
+};
+
+const getCreationDate = (startDate) => {
+    const dateCreation = new Date(startDate);
+
+    let createdDate = dateCreation.getDate();
+    let createdMonth = dateCreation.getMonth();
+    let createdYear = dateCreation.getFullYear();
+
+    const arrayMonth = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
+
+    for (let i = 0; i < arrayMonth.length; i++) {
+        if (createdMonth - 1 === i) {
+            createdMonth = arrayMonth[i];
+        }
+    }
+
+    return createdDate + " " + createdMonth + " " + createdYear;
 };
