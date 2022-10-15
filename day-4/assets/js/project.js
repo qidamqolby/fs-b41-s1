@@ -207,7 +207,6 @@ const deleteProject = (id) => {
 };
 
 // find project index
-
 const findProjectIndex = (projectId) => {
     for (const project of dataProject) {
         if (project.id === projectId) {
@@ -218,6 +217,7 @@ const findProjectIndex = (projectId) => {
     return null;
 };
 
+// calculate duration
 const getDurationTime = (startDate, endDate) => {
     const date1 = new Date(startDate);
     const date2 = new Date(endDate);
@@ -228,6 +228,7 @@ const getDurationTime = (startDate, endDate) => {
     let durationTotal = "";
 
     if (projectDuration > 30) {
+        // not calculate correctly
         calculateDuration = Math.round(projectDuration / 30);
         durationTotal = `${calculateDuration} month(s)`;
     } else {
@@ -236,6 +237,7 @@ const getDurationTime = (startDate, endDate) => {
     return durationTotal;
 };
 
+// generate creation date
 const getCreationDate = (startDate) => {
     const dateCreation = new Date(startDate);
 
