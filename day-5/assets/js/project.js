@@ -267,3 +267,23 @@ const getCreationDate = (startDate) => {
 
     return createdDate + " " + createdMonth + " " + createdYear;
 };
+
+// edit project
+const editProject = (id) => {
+    const projectTarget = findProjectIndex(id);
+
+    if (projectTarget === -1) {
+        return;
+    } else {
+        inputProjectName.value = projectTarget.projectName;
+        inputStartDate.value = projectTarget.startDate;
+        inputEndDate.value = projectTarget.endDate;
+        inputProjectDesc.value = projectTarget.projectDesc;
+        inputUseNodeJS.checked = projectTarget.useNodeJS;
+        inputUseNextJS.checked = projectTarget.useNextJS;
+        inputUseReactJS.checked = projectTarget.useReactJS;
+        inputUseTypeScript.checked = projectTarget.useTypeScript;
+    }
+
+    dataProject.splice(projectTarget, 1);
+};
