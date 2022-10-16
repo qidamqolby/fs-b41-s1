@@ -22,7 +22,7 @@ const sendMail = () => {
 
     const a = document.createElement("a");
 
-    a.href = `mailto:${emailReciever}?subject=${subject}&body= Hello, my name is ${name}, ${message}, please contact me at ${phone}`;
+    a.href = `mailto:${emailReciever}?subject=${subject}&body= Hello, my name is ${name}, please contact me at ${phone} \n ${message}`;
     console.log(a);
     a.click();
 
