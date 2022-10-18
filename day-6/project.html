@@ -50,20 +50,76 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="index.html" class="nav-link fw-semi-bold">Home</a>
+                        <a href="index.html" class="nav-link fw-bold">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="project.html" class="nav-link fw-semi-bold active" aria-current="page">Add Project</a>
+                        <a href="project.html" class="nav-link fw-bold active" aria-current="page">Add Project</a>
                     </li>
                 </ul>
-                <a href="contact.html" class="btn btn-dark fw-semi-bold ms-auto">Contact Me</a>
+                <a href="contact.html" class="btn btn-dark fw-bold ms-auto">Contact Me</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="container bg-white shadow" style="margin-top: 100px;">
-
+    <!-- Project Input -->
+    <section class="container" style="margin: 100px auto; width: 540px;">
+        <form method="get" class="row" id="project-input">
+            <h2 class="text-center fw-bold">ADD MY PROJECT</h2>
+            <div class="col-md-12 mb-3">
+                <label for="project-name" class="form-label fw-bold">Project Name</label>
+                <input type="text" class="form-control" id="project-name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="date-start" class="form-label fw-bold">Start Date</label>
+                <input type="date" class="form-control" id="date-start" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="date-end" class="form-label fw-bold">End Date</label>
+                <input type="date" class="form-control" id="date-end" required>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="project-description" class="form-label fw-bold">Description</label>
+                <textarea class="form-control" id="project-description" cols="30" rows="10"
+                    style="resize: none;"></textarea>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="#" class="form-label fw-bold">Technologies</label>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="node-js">
+                <label class="form-check-label" for="node-js">
+                    Node JS
+                </label>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="react-js">
+                <label class="form-check-label" for="react-js">
+                    React JS
+                </label>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="next-js">
+                <label class="form-check-label" for="next-js">
+                    Next JS
+                </label>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="typescript">
+                <label class="form-check-label" for="typescript">
+                    TypeScript
+                </label>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="upload-image" class="form-label fw-bold">Upload Image</label>
+                <div class="input-group">
+                    <input type="file" class="form-control" id="upload-image" aria-label="Upload">
+                    <span class="input-group-text"><i class="fa-solid fa-paperclip"></i></span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-dark rounded-5 px-4 fw-bold float-end">submit</button>
+            </div>
+        </form>
     </section>
 
     <!-- Bootstrap JS -->
