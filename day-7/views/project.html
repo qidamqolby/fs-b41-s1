@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Web</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Font Google: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #e3e7eb;
+        }
+
+        .dumbways-logo {
+            filter: invert(47%) sepia(64%) saturate(4726%) hue-rotate(341deg) brightness(103%) contrast(105%);
+        }
+
+
+        .text-justify {
+            text-align: justify;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg bg-light shadow-sm fixed-top">
+        <div class="container">
+            <a href="/" class="navbar-brand">
+                <img src="../public/images/logo.png" alt="logo" width="70" class="dumbways-logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link fw-bold">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/project" class="nav-link fw-bold active" aria-current="page">Add Project</a>
+                    </li>
+                </ul>
+                <a href="/contact" class="btn btn-dark fw-bold ms-auto">Contact Me</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Project Input -->
+    <section class="container" style="margin: 100px auto; width: 540px;">
+        <form action="/add-project" method="post" class="row" id="project-input">
+            <h2 class="text-center fw-bold">ADD MY PROJECT</h2>
+            <div class="col-md-12 mb-3">
+                <label for="project-name" class="form-label fw-bold">Project Name</label>
+                <input type="text" class="form-control" id="project-name" name="project-name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="date-start" class="form-label fw-bold">Start Date</label>
+                <input type="date" class="form-control" id="date-start" name="date-start" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="date-end" class="form-label fw-bold">End Date</label>
+                <input type="date" class="form-control" id="date-end" name="date-end" required>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="project-description" class="form-label fw-bold">Description</label>
+                <textarea class="form-control" id="project-description" cols="30" rows="10" style="resize: none;"
+                    name="project-description"></textarea>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="#" class="form-label fw-bold">Technologies</label>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input class="form-check-input" type="checkbox" id="node-js" name="node-js">
+                <label class="form-check-label" for="node-js">
+                    Node JS
+                </label>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input class="form-check-input" type="checkbox" id="react-js" name="react-js">
+                <label class="form-check-label" for="react-js">
+                    React JS
+                </label>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input class="form-check-input" type="checkbox" id="next-js" name="next-js">
+                <label class="form-check-label" for="next-js">
+                    Next JS
+                </label>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input class="form-check-input" type="checkbox" id="typescript" name="typescript">
+                <label class="form-check-label" for="typescript">
+                    TypeScript
+                </label>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="upload-image" class="form-label fw-bold">Upload Image</label>
+                <div class="input-group">
+                    <input type="file" class="form-control" id="upload-image" aria-label="Upload">
+                    <span class="input-group-text"><i class="fa-solid fa-paperclip"></i></span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <button class="btn btn-dark rounded-5 px-4 fw-bold float-end">submit</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
