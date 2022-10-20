@@ -5,14 +5,10 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
-
-// interface
-var data = map[string]interface{}{
-	"Title": "Personal Web",
-}
 
 // struct
 type Project struct {
@@ -31,8 +27,8 @@ var ProjectList = []Project{
 	// dummy data
 	{
 		ProjectName:          "Test Project Main",
-		ProjectStartDate:     "20 October 2022",
-		ProjectEndDate:       "31 October 2022",
+		ProjectStartDate:     "2022-10-20",
+		ProjectEndDate:       "2022-10-31",
 		ProjectDescription:   "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
 		ProjectUseNodeJS:     "on",
 		ProjectUseReactJS:    "on",
@@ -48,9 +44,9 @@ func main() {
 	route.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
 
 	// routing
-	route.HandleFunc("/", home).Methods("GET")
-	route.HandleFunc("/contact", contact).Methods("GET")
-	route.HandleFunc("/project", projectForm).Methods("GET")
+	route.HandleFunc("/", homePage).Methods("GET")
+	route.HandleFunc("/contact", contactPage).Methods("GET")
+	route.HandleFunc("/project", projectPage).Methods("GET")
 	route.HandleFunc("/create-project", createProject).Methods("POST")
 
 	fmt.Println(("Server running on port 5000"))
@@ -58,7 +54,7 @@ func main() {
 }
 
 // function route home page
-func home(w http.ResponseWriter, r *http.Request) {
+func homePage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	var tmpl, err = template.ParseFiles("views/index.html")
@@ -68,13 +64,37 @@ func home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// create render home project
+	var projectItem = Project{}
+
+	index, _ := strconv.Atoi(mux.Vars(r)["index"])
+
+	for i, data := range ProjectList {
+		if index == i {
+			projectItem = Project{
+				ProjectName:          data.ProjectName,
+				ProjectStartDate:     data.ProjectStartDate,
+				ProjectEndDate:       data.ProjectEndDate,
+				ProjectDescription:   data.ProjectDescription,
+				ProjectUseNodeJS:     data.ProjectUseNodeJS,
+				ProjectUseReactJS:    data.ProjectUseReactJS,
+				ProjectUseGolang:     data.ProjectUseGolang,
+				ProjectUseJavaScript: data.ProjectUseJavaScript,
+			}
+		}
+	}
+
+	data := map[string]interface{}{
+		"Project": projectItem,
+	}
+
+	fmt.Println(data)
 
 	w.WriteHeader(http.StatusOK)
-	tmpl.Execute(w, nil)
+	tmpl.Execute(w, data)
 }
 
 // function route contact page
-func contact(w http.ResponseWriter, r *http.Request) {
+func contactPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	var tmpl, err = template.ParseFiles("views/contact.html")
@@ -89,7 +109,7 @@ func contact(w http.ResponseWriter, r *http.Request) {
 }
 
 // function route project page
-func projectForm(w http.ResponseWriter, r *http.Request) {
+func projectPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	var tmpl, err = template.ParseFiles("views/project.html")
