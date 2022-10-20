@@ -1,0 +1,45 @@
+/* MAIN CSS */
+body {
+    font-family: "Poppins", sans-serif;
+    background: #e3e7eb;
+}
+
+section {
+    margin: 100px auto;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.dumbways-logo {
+    filter: invert(47%) sepia(64%) saturate(4726%) hue-rotate(341deg)
+        brightness(103%) contrast(105%);
+}
+
+.input textarea {
+    resize: none;
+}
+
+/* HOMEPAGE */
+.icon-link {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.hero-card {
+    width: 350px;
+}
+
+.project-item {
+    width: 350px;
+    height: 600px;
+}
+
+/* CONTACT */
+.contact-form,
+.project-form {
+    max-width: 540px;
+}
