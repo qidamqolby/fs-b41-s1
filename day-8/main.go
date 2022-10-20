@@ -5,15 +5,16 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
+// interface
 var data = map[string]interface{}{
 	"Title": "Personal Web",
 }
 
+// struct
 type Project struct {
 	ProjectName          string
 	ProjectStartDate     string
@@ -25,7 +26,9 @@ type Project struct {
 	ProjectUseJavaScript string
 }
 
+// local database
 var ProjectList = []Project{
+	// dummy data
 	{
 		ProjectName:          "Test Project Main",
 		ProjectStartDate:     "20 October 2022",
@@ -54,6 +57,7 @@ func main() {
 	http.ListenAndServe("localhost:5000", route)
 }
 
+// function route home page
 func home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -63,33 +67,13 @@ func home(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("message : " + err.Error()))
 		return
 	}
-	var projectItem = Project{}
-
-	index, _ := strconv.Atoi(mux.Vars(r)["index"])
-
-	for i, data := range ProjectList {
-		if index == i {
-			projectItem = Project{
-				ProjectName:          data.ProjectName,
-				ProjectStartDate:     data.ProjectStartDate,
-				ProjectEndDate:       data.ProjectEndDate,
-				ProjectDescription:   data.ProjectDescription,
-				ProjectUseNodeJS:     data.ProjectUseNodeJS,
-				ProjectUseReactJS:    data.ProjectUseReactJS,
-				ProjectUseGolang:     data.ProjectUseGolang,
-				ProjectUseJavaScript: data.ProjectUseJavaScript,
-			}
-		}
-	}
-
-	data := map[string]interface{}{
-		"Project": projectItem,
-	}
+	// create render home project
 
 	w.WriteHeader(http.StatusOK)
-	tmpl.Execute(w, data)
+	tmpl.Execute(w, nil)
 }
 
+// function route contact page
 func contact(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -104,6 +88,7 @@ func contact(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
+// function route project page
 func projectForm(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -118,6 +103,7 @@ func projectForm(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
+// function create project and adding to local database
 func createProject(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 
@@ -151,3 +137,7 @@ func createProject(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/project", http.StatusMovedPermanently)
 
 }
+
+// function delete project in local database
+
+// function update project in local database
