@@ -48,6 +48,7 @@ func main() {
 	route.HandleFunc("/contact", contactPage).Methods("GET")
 	route.HandleFunc("/project", projectPage).Methods("GET")
 	route.HandleFunc("/create-project", createProject).Methods("POST")
+	route.HandleFunc("/delete-project/{index}", deleteProject).Methods("GET")
 
 	fmt.Println(("Server running on port 5000"))
 	http.ListenAndServe("localhost:5000", route)
@@ -64,33 +65,13 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// create render home project
-	var projectItem = Project{}
 
-	index, _ := strconv.Atoi(mux.Vars(r)["index"])
-
-	for i, data := range ProjectList {
-		if index == i {
-			projectItem = Project{
-				ProjectName:          data.ProjectName,
-				ProjectStartDate:     data.ProjectStartDate,
-				ProjectEndDate:       data.ProjectEndDate,
-				ProjectDescription:   data.ProjectDescription,
-				ProjectUseNodeJS:     data.ProjectUseNodeJS,
-				ProjectUseReactJS:    data.ProjectUseReactJS,
-				ProjectUseGolang:     data.ProjectUseGolang,
-				ProjectUseJavaScript: data.ProjectUseJavaScript,
-			}
-		}
+	responseData := map[string]interface{}{
+		"ProjectList": ProjectList,
 	}
-
-	data := map[string]interface{}{
-		"Project": projectItem,
-	}
-
-	fmt.Println(data)
 
 	w.WriteHeader(http.StatusOK)
-	tmpl.Execute(w, data)
+	tmpl.Execute(w, responseData)
 }
 
 // function route contact page
@@ -152,12 +133,20 @@ func createProject(w http.ResponseWriter, r *http.Request) {
 	}
 	ProjectList = append(ProjectList, newProject)
 
-	fmt.Println(ProjectList)
-
 	http.Redirect(w, r, "/project", http.StatusMovedPermanently)
 
 }
 
 // function delete project in local database
+func deleteProject(w http.ResponseWriter, r *http.Request) {
+
+	index, _ := strconv.Atoi(mux.Vars(r)["index"])
+
+	ProjectList = append(ProjectList[:index], ProjectList[index+1:]...)
+
+	fmt.Println(ProjectList)
+
+	http.Redirect(w, r, "/", http.StatusFound)
+}
 
 // function update project in local database

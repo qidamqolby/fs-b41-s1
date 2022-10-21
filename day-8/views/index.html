@@ -125,12 +125,14 @@
                 <h2 class="text-center">My Project</h2>
                 <div class="project-content row p-5 gap-3 justify-content-center">
 
+                    <!-- Dynamic Content -->
+                    {{range $index, $data := .ProjectList}}
                     <div class="project-item card shadow p-2">
                         <img src="../public/images/img-template-1.jpg" alt="" height="250" class="card-img">
                         <div class="card-body mx-3">
-                            <h5 class="card-title fw-semibold">{{.Project.ProjectName}}</h5>
+                            <h5 class="card-title fw-semibold">{{$data.ProjectName}}</h5>
                             <h6 class="card-subtitle text-muted mb-3">Durasi: 6 bulan</h6>
-                            <p class="card-text text-justify">{{.Project.ProjectDescription}}.</p>
+                            <p class="card-text text-justify">{{$data.ProjectDescription}}.</p>
                         </div>
                         <div class="card-body mx-3 d-flex justify-content-start gap-3">
                             <i class="fa-brands fa-node" style="font-size: 32px;"></i>
@@ -140,10 +142,10 @@
                         </div>
                         <div class="card-body align-self-center gap-3">
                             <a href="" class="btn btn-dark">edit</a>
-                            <a href="" class="btn btn-danger">delete</a>
+                            <a href="/delete-project/{{$index}}" class="btn btn-danger">delete</a>
                         </div>
                     </div>
-
+                    {{end}}
                 </div>
             </div>
         </section>
