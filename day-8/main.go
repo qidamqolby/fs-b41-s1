@@ -49,6 +49,7 @@ func main() {
 	route.HandleFunc("/project", projectPage).Methods("GET")
 	route.HandleFunc("/create-project", createProject).Methods("POST")
 	route.HandleFunc("/delete-project/{index}", deleteProject).Methods("GET")
+	route.HandleFunc("/update-project/{index}", updateProject).Methods("GET")
 
 	fmt.Println(("Server running on port 5000"))
 	http.ListenAndServe("localhost:5000", route)
@@ -64,8 +65,8 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("message : " + err.Error()))
 		return
 	}
-	// create render home project
 
+	// create render home project
 	responseData := map[string]interface{}{
 		"ProjectList": ProjectList,
 	}
@@ -133,20 +134,19 @@ func createProject(w http.ResponseWriter, r *http.Request) {
 	}
 	ProjectList = append(ProjectList, newProject)
 
-	http.Redirect(w, r, "/project", http.StatusMovedPermanently)
-
+	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
 // function delete project in local database
 func deleteProject(w http.ResponseWriter, r *http.Request) {
-
 	index, _ := strconv.Atoi(mux.Vars(r)["index"])
 
 	ProjectList = append(ProjectList[:index], ProjectList[index+1:]...)
-
-	fmt.Println(ProjectList)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 // function update project in local database
+func updateProject(w http.ResponseWriter, r *http.Request) {
+	// work in progress
+}
