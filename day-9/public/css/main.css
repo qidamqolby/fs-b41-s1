@@ -1,0 +1,77 @@
+/* MAIN CSS */
+body {
+    font-family: "Poppins", sans-serif;
+    background: #e3e7eb;
+}
+
+section {
+    margin: 100px auto;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.dumbways-logo {
+    filter: invert(47%) sepia(64%) saturate(4726%) hue-rotate(341deg)
+        brightness(103%) contrast(105%);
+}
+
+.input textarea {
+    resize: none;
+}
+
+/* HOMEPAGE */
+.icon-link {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.hero-card {
+    width: 350px;
+}
+
+.project-item {
+    width: 350px;
+    height: 600px;
+}
+
+/* CONTACT */
+.contact-form,
+.project-form {
+    max-width: 540px;
+}
+
+/* PROJECT DETAIL */
+.detail-left img {
+    width: 100%;
+}
+
+.content-description {
+    background: none;
+    border: none;
+
+    width: 100%;
+}
+
+.tech-list {
+    width: 100%;
+}
+
+.tech-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.tech-item img {
+    width: 32px;
+    height: 32px;
+}
+
+.tech-item p {
+    margin-top: 15px;
+}
