@@ -9,7 +9,7 @@ Day 1 - 5
 Day 6 - 12
 
 -   Bootstrap (CSS Framework)
--   Golang (Backend)
+-   Golang & PostgreSQL (Backend)
 
 ## Authors
 
