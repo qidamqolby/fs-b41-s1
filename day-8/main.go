@@ -12,28 +12,32 @@ import (
 
 // struct
 type Project struct {
-	ProjectName          string
-	ProjectStartDate     string
-	ProjectEndDate       string
-	ProjectDescription   string
-	ProjectUseNodeJS     string
-	ProjectUseReactJS    string
-	ProjectUseGolang     string
-	ProjectUseJavaScript string
+	ProjectID           int
+	ProjectName         string
+	ProjectStartDate    string
+	ProjectEndDate      string
+	ProjectDescription  string
+	ProjectTechnologies []string
 }
 
 // local database
 var ProjectList = []Project{
 	// dummy data
 	{
-		ProjectName:          "Test Project Main",
-		ProjectStartDate:     "2022-10-20",
-		ProjectEndDate:       "2022-10-31",
-		ProjectDescription:   "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-		ProjectUseNodeJS:     "on",
-		ProjectUseReactJS:    "on",
-		ProjectUseGolang:     "on",
-		ProjectUseJavaScript: "on",
+		ProjectID:           0,
+		ProjectName:         "Test Project Main",
+		ProjectStartDate:    "2022-10-20",
+		ProjectEndDate:      "2022-10-31",
+		ProjectDescription:  "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+		ProjectTechnologies: []string{"nodejs", "reactjs"},
+	},
+	{
+		ProjectID:           1,
+		ProjectName:         "Test Project Additional",
+		ProjectStartDate:    "2022-10-20",
+		ProjectEndDate:      "2022-10-31",
+		ProjectDescription:  "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+		ProjectTechnologies: []string{"nodejs", "reactjs"},
 	},
 }
 
@@ -48,8 +52,9 @@ func main() {
 	route.HandleFunc("/contact", contactPage).Methods("GET")
 	route.HandleFunc("/project", projectPage).Methods("GET")
 	route.HandleFunc("/create-project", createProject).Methods("POST")
-	route.HandleFunc("/delete-project/{index}", deleteProject).Methods("GET")
-	route.HandleFunc("/update-project/{index}", updateProject).Methods("GET")
+	route.HandleFunc("/delete-project/{id}", deleteProject).Methods("GET")
+	route.HandleFunc("/update-project/{id}", updateProject).Methods("GET")
+	route.HandleFunc("/project-detail/{id}", projectDetail).Methods("GET")
 
 	fmt.Println(("Server running on port 5000"))
 	http.ListenAndServe("localhost:5000", route)
@@ -117,29 +122,32 @@ func createProject(w http.ResponseWriter, r *http.Request) {
 	var projectStartDate = r.PostForm.Get("date-start")
 	var projectEndDate = r.PostForm.Get("date-end")
 	var projectDescription = r.PostForm.Get("project-description")
-	var projectUseNodeJS = r.PostForm.Get("node-js")
-	var projectUseReactJS = r.PostForm.Get("react-js")
+	var projectUseNodeJS = r.PostForm.Get("nodejs")
+	var projectUseReactJS = r.PostForm.Get("reactjs")
 	var projectUseGolang = r.PostForm.Get("golang")
-	var projectUseJavaScript = r.PostForm.Get("javascript")
+	var projectUseTypeScript = r.PostForm.Get("typescript")
 
 	var newProject = Project{
-		ProjectName:          projectName,
-		ProjectStartDate:     projectStartDate,
-		ProjectEndDate:       projectEndDate,
-		ProjectDescription:   projectDescription,
-		ProjectUseNodeJS:     projectUseNodeJS,
-		ProjectUseReactJS:    projectUseReactJS,
-		ProjectUseGolang:     projectUseGolang,
-		ProjectUseJavaScript: projectUseJavaScript,
+		ProjectName:         projectName,
+		ProjectStartDate:    projectStartDate,
+		ProjectEndDate:      projectEndDate,
+		ProjectDescription:  projectDescription,
+		ProjectTechnologies: []string{projectUseNodeJS, projectUseReactJS, projectUseGolang, projectUseTypeScript},
 	}
 	ProjectList = append(ProjectList, newProject)
+
+	fmt.Println(ProjectList)
 
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
+func GenerateProjectID() {
+
+}
+
 // function delete project in local database
 func deleteProject(w http.ResponseWriter, r *http.Request) {
-	index, _ := strconv.Atoi(mux.Vars(r)["index"])
+	index, _ := strconv.Atoi(mux.Vars(r)["id"])
 
 	ProjectList = append(ProjectList[:index], ProjectList[index+1:]...)
 
@@ -148,5 +156,9 @@ func deleteProject(w http.ResponseWriter, r *http.Request) {
 
 // function update project in local database
 func updateProject(w http.ResponseWriter, r *http.Request) {
+	// work in progress
+}
+
+func projectDetail(w http.ResponseWriter, r *http.Request) {
 	// work in progress
 }
