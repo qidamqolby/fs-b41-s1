@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"day-9/connection"
 	"fmt"
 	"html/template"
 	"log"
@@ -13,6 +15,7 @@ import (
 
 // STRUCT TEMPLATE
 type Project struct {
+	ID                   int
 	ProjectName          string
 	ProjectStartDate     string
 	ProjectEndDate       string
@@ -26,33 +29,36 @@ type Project struct {
 
 // LOCAL DATABASE
 var ProjectList = []Project{
-	{
-		ProjectName:          "Test Project Main",
-		ProjectStartDate:     "01 October 2022",
-		ProjectEndDate:       "01 December 2022",
-		ProjectDuration:      "2 Months",
-		ProjectDescription:   "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-		ProjectUseNodeJS:     "checked",
-		ProjectUseReactJS:    "checked",
-		ProjectUseGolang:     "checked",
-		ProjectUseTypeScript: "checked",
-	},
-	{
-		ProjectName:          "Test Project Additional",
-		ProjectStartDate:     "20 October 2022",
-		ProjectEndDate:       "21 November 2022",
-		ProjectDuration:      "1 Months",
-		ProjectDescription:   "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-		ProjectUseNodeJS:     "checked",
-		ProjectUseReactJS:    "",
-		ProjectUseGolang:     "checked",
-		ProjectUseTypeScript: "",
-	},
+	// {
+	// 	ProjectName:          "Test Project Main",
+	// 	ProjectStartDate:     "01 October 2022",
+	// 	ProjectEndDate:       "01 December 2022",
+	// 	ProjectDuration:      "2 Months",
+	// 	ProjectDescription:   "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+	// 	ProjectUseNodeJS:     "checked",
+	// 	ProjectUseReactJS:    "checked",
+	// 	ProjectUseGolang:     "checked",
+	// 	ProjectUseTypeScript: "checked",
+	// },
+	// {
+	// 	ProjectName:          "Test Project Additional",
+	// 	ProjectStartDate:     "20 October 2022",
+	// 	ProjectEndDate:       "21 November 2022",
+	// 	ProjectDuration:      "1 Months",
+	// 	ProjectDescription:   "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+	// 	ProjectUseNodeJS:     "checked",
+	// 	ProjectUseReactJS:    "",
+	// 	ProjectUseGolang:     "checked",
+	// 	ProjectUseTypeScript: "",
+	// },
 }
 
 // MAIN
 func main() {
 	route := mux.NewRouter()
+
+	// CONNECTION TO DATABASE
+	connection.DatabaseConnect()
 
 	// ROUTE PUBLIC FOLDER
 	route.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
@@ -84,6 +90,23 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("message : " + err.Error()))
 		return
+	}
+
+	rows, _ := connection.Conn.Query(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDuration", "ProjectDescription", "ProjectUseNodeJS", "ProjectUseReactJS", "ProjectUseGolang", "ProjectUseTypeScript" FROM public.tb_project`)
+
+	for rows.Next() {
+
+		var item = Project{}
+
+		err := rows.Scan(&item.ID, &item.ProjectName, &item.ProjectStartDate, &item.ProjectEndDate, &item.ProjectDuration, &item.ProjectDescription, &item.ProjectUseNodeJS, &item.ProjectUseReactJS, &item.ProjectUseGolang, &item.ProjectUseTypeScript)
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		ProjectList = append(ProjectList, item)
+		fmt.Println(item)
 	}
 
 	response := map[string]interface{}{
