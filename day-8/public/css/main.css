@@ -43,3 +43,35 @@ section {
 .project-form {
     max-width: 540px;
 }
+
+/* PROJECT DETAIL */
+.detail-left img {
+    width: 100%;
+}
+
+.content-description {
+    background: none;
+    border: none;
+
+    width: 100%;
+}
+
+.tech-list {
+    width: 100%;
+}
+
+.tech-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.tech-item img {
+    width: 32px;
+    height: 32px;
+}
+
+.tech-item p {
+    margin-top: 15px;
+}
