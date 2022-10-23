@@ -15,41 +15,32 @@ import (
 
 // STRUCT TEMPLATE
 type Project struct {
-	ID                   int
-	ProjectName          string
-	ProjectStartDate     string
-	ProjectEndDate       string
-	ProjectDuration      string
-	ProjectDescription   string
-	ProjectUseNodeJS     string
-	ProjectUseReactJS    string
-	ProjectUseGolang     string
-	ProjectUseTypeScript string
+	ID                  int
+	ProjectName         string
+	ProjectStartDate    string
+	ProjectEndDate      string
+	ProjectDuration     string
+	ProjectDescription  string
+	ProjectTechnologies []string
 }
 
 // LOCAL DATABASE
 var ProjectList = []Project{
 	// {
-	// 	ProjectName:          "Test Project Main",
-	// 	ProjectStartDate:     "01 October 2022",
-	// 	ProjectEndDate:       "01 December 2022",
-	// 	ProjectDuration:      "2 Months",
-	// 	ProjectDescription:   "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-	// 	ProjectUseNodeJS:     "checked",
-	// 	ProjectUseReactJS:    "checked",
-	// 	ProjectUseGolang:     "checked",
-	// 	ProjectUseTypeScript: "checked",
+	// 	ProjectName:         "Test Project Main",
+	// 	ProjectStartDate:    "01 October 2022",
+	// 	ProjectEndDate:      "01 December 2022",
+	// 	ProjectDuration:     "2 Months",
+	// 	ProjectDescription:  "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+	// 	ProjectTechnologies: [4]string{"checked", "checked", "checked", "checked"},
 	// },
 	// {
-	// 	ProjectName:          "Test Project Additional",
-	// 	ProjectStartDate:     "20 October 2022",
-	// 	ProjectEndDate:       "21 November 2022",
-	// 	ProjectDuration:      "1 Months",
-	// 	ProjectDescription:   "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-	// 	ProjectUseNodeJS:     "checked",
-	// 	ProjectUseReactJS:    "",
-	// 	ProjectUseGolang:     "checked",
-	// 	ProjectUseTypeScript: "",
+	// 	ProjectName:         "Test Project Additional",
+	// 	ProjectStartDate:    "20 October 2022",
+	// 	ProjectEndDate:      "21 November 2022",
+	// 	ProjectDuration:     "1 Month",
+	// 	ProjectDescription:  "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+	// 	ProjectTechnologies: [4]string{"checked", "", "", "checked"},
 	// },
 }
 
@@ -92,13 +83,13 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, _ := connection.Conn.Query(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDuration", "ProjectDescription", "ProjectUseNodeJS", "ProjectUseReactJS", "ProjectUseGolang", "ProjectUseTypeScript" FROM public.tb_project`)
+	rows, _ := connection.Conn.Query(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDuration", "ProjectDescription", "ProjectTechnologies" FROM public.tb_project`)
 
 	for rows.Next() {
 
 		var item = Project{}
 
-		err := rows.Scan(&item.ID, &item.ProjectName, &item.ProjectStartDate, &item.ProjectEndDate, &item.ProjectDuration, &item.ProjectDescription, &item.ProjectUseNodeJS, &item.ProjectUseReactJS, &item.ProjectUseGolang, &item.ProjectUseTypeScript)
+		err := rows.Scan(&item.ID, &item.ProjectName, &item.ProjectStartDate, &item.ProjectEndDate, &item.ProjectDuration, &item.ProjectDescription, &item.ProjectTechnologies)
 
 		if err != nil {
 			fmt.Println(err.Error())
@@ -163,15 +154,12 @@ func ProjectDetail(w http.ResponseWriter, r *http.Request) {
 		for i, data := range ProjectList {
 			if index == i {
 				renderDetail = Project{
-					ProjectName:          data.ProjectName,
-					ProjectStartDate:     data.ProjectStartDate,
-					ProjectEndDate:       data.ProjectEndDate,
-					ProjectDuration:      data.ProjectDuration,
-					ProjectDescription:   data.ProjectDescription,
-					ProjectUseNodeJS:     data.ProjectUseNodeJS,
-					ProjectUseReactJS:    data.ProjectUseReactJS,
-					ProjectUseGolang:     data.ProjectUseGolang,
-					ProjectUseTypeScript: data.ProjectUseTypeScript,
+					ProjectName:         data.ProjectName,
+					ProjectStartDate:    data.ProjectStartDate,
+					ProjectEndDate:      data.ProjectEndDate,
+					ProjectDuration:     data.ProjectDuration,
+					ProjectDescription:  data.ProjectDescription,
+					ProjectTechnologies: data.ProjectTechnologies,
 				}
 			}
 		}
@@ -200,15 +188,12 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 		projectUseTypeScript := r.PostForm.Get("typescript")
 
 		var newProject = Project{
-			ProjectName:          projectName,
-			ProjectStartDate:     FormatDate(projectStartDate),
-			ProjectEndDate:       FormatDate(projectEndDate),
-			ProjectDuration:      GetDuration(projectStartDate, projectEndDate),
-			ProjectDescription:   projectDescription,
-			ProjectUseNodeJS:     projectUseNodeJS,
-			ProjectUseReactJS:    projectUseReactJS,
-			ProjectUseGolang:     projectUseGolang,
-			ProjectUseTypeScript: projectUseTypeScript,
+			ProjectName:         projectName,
+			ProjectStartDate:    FormatDate(projectStartDate),
+			ProjectEndDate:      FormatDate(projectEndDate),
+			ProjectDuration:     GetDuration(projectStartDate, projectEndDate),
+			ProjectDescription:  projectDescription,
+			ProjectTechnologies: []string{projectUseNodeJS, projectUseReactJS, projectUseGolang, projectUseTypeScript},
 		}
 
 		fmt.Println(newProject)
@@ -245,14 +230,11 @@ func UpdateProject(w http.ResponseWriter, r *http.Request) {
 		for i, data := range ProjectList {
 			if index == i {
 				updateData = Project{
-					ProjectName:          data.ProjectName,
-					ProjectStartDate:     ReturnDate(data.ProjectStartDate),
-					ProjectEndDate:       ReturnDate(data.ProjectEndDate),
-					ProjectDescription:   data.ProjectDescription,
-					ProjectUseNodeJS:     data.ProjectUseNodeJS,
-					ProjectUseReactJS:    data.ProjectUseReactJS,
-					ProjectUseGolang:     data.ProjectUseGolang,
-					ProjectUseTypeScript: data.ProjectUseTypeScript,
+					ProjectName:         data.ProjectName,
+					ProjectStartDate:    ReturnDate(data.ProjectStartDate),
+					ProjectEndDate:      ReturnDate(data.ProjectEndDate),
+					ProjectDescription:  data.ProjectDescription,
+					ProjectTechnologies: data.ProjectTechnologies,
 				}
 				ProjectList = append(ProjectList[:index], ProjectList[index+1:]...)
 			}

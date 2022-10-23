@@ -73,25 +73,25 @@
                             <div class="tech-description card-body p-3">
                                 <h3 class="card-title">Technologies</h3>
                                 <div class="tech-list row">
-                                    {{if eq .renderDetail.ProjectUseNodeJS "checked"}}
+                                    {{if eq (index .renderDetail.ProjectTechnologies 0) "checked"}}
                                     <div class="tech-item col-6">
                                         <img src="../public/icons/nodejs.svg" alt="">
                                         <p>Node JS</p>
                                     </div>
                                     {{end}}
-                                    {{if eq .renderDetail.ProjectUseReactJS "checked"}}
+                                    {{if eq (index .renderDetail.ProjectTechnologies 1) "checked"}}
                                     <div class="tech-item col-6">
                                         <img src="../public/icons/react-native.svg" alt="">
                                         <p>React JS</p>
                                     </div>
                                     {{end}}
-                                    {{if eq .renderDetail.ProjectUseGolang "checked"}}
+                                    {{if eq (index .renderDetail.ProjectTechnologies 2) "checked"}}
                                     <div class="tech-item col-6">
                                         <img src="../public/icons/golang.svg" alt="">
                                         <p>Go</p>
                                     </div>
                                     {{end}}
-                                    {{if eq .renderDetail.ProjectUseTypeScript "checked"}}
+                                    {{if eq (index .renderDetail.ProjectTechnologies 3) "checked"}}
                                     <div class="tech-item col-6">
                                         <img src="../public/icons/typescript.svg" alt="">
                                         <p>TypeScript</p>

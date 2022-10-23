@@ -133,16 +133,17 @@
                             <p class="card-text text-justify">{{$data.ProjectDescription}}.</p>
                         </div>
                         <div class="card-body d-flex justify-content-start gap-3">
-                            {{if eq $data.ProjectUseNodeJS "checked"}}
+                            <!-- ITEM TECHNOLOGIES -->
+                            {{if eq (index $data.ProjectTechnologies 0) "checked"}}
                             <img src="../public/icons/nodejs.svg" alt="nodejs" style="width: 32px;">
                             {{end}}
-                            {{if eq $data.ProjectUseReactJS "checked"}}
+                            {{if eq (index $data.ProjectTechnologies 1) "checked"}}
                             <img src="../public/icons/react-native.svg" alt="reactjs" style="width: 32px;">
                             {{end}}
-                            {{if eq $data.ProjectUseGolang "checked"}}
+                            {{if eq (index $data.ProjectTechnologies 2) "checked"}}
                             <img src="../public/icons/golang.svg" alt="golang" style="width: 32px;">
                             {{end}}
-                            {{if eq $data.ProjectUseTypeScript "checked"}}
+                            {{if eq (index $data.ProjectTechnologies 3) "checked"}}
                             <img src="../public/icons/typescript.svg" alt="typescript" style="width: 32px;">
                             {{end}}
                         </div>
