@@ -25,24 +25,7 @@ type Project struct {
 }
 
 // LOCAL DATABASE
-var ProjectList = []Project{
-	// {
-	// 	ProjectName:         "Test Project Main",
-	// 	ProjectStartDate:    "01 October 2022",
-	// 	ProjectEndDate:      "01 December 2022",
-	// 	ProjectDuration:     "2 Months",
-	// 	ProjectDescription:  "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-	// 	ProjectTechnologies: [4]string{"checked", "checked", "checked", "checked"},
-	// },
-	// {
-	// 	ProjectName:         "Test Project Additional",
-	// 	ProjectStartDate:    "20 October 2022",
-	// 	ProjectEndDate:      "21 November 2022",
-	// 	ProjectDuration:     "1 Month",
-	// 	ProjectDescription:  "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-	// 	ProjectTechnologies: [4]string{"checked", "", "", "checked"},
-	// },
-}
+var ProjectList = []Project{}
 
 // MAIN
 func main() {
@@ -122,7 +105,7 @@ func ContactPage(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
-// RENDER ADD PROJECT PAGE
+// RENDER PROJECT PAGE
 func CreateProjectPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -203,17 +186,7 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// DELETE PROJECT
-func DeleteProject(w http.ResponseWriter, r *http.Request) {
-
-	index, _ := strconv.Atoi(mux.Vars(r)["index"])
-
-	ProjectList = append(ProjectList[:index], ProjectList[index+1:]...)
-
-	http.Redirect(w, r, "/", http.StatusFound)
-}
-
-// GET PROJECT TO EDIT
+// UPDATE PROJECT
 func UpdateProject(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -246,6 +219,16 @@ func UpdateProject(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// DELETE PROJECT
+func DeleteProject(w http.ResponseWriter, r *http.Request) {
+
+	index, _ := strconv.Atoi(mux.Vars(r)["index"])
+
+	ProjectList = append(ProjectList[:index], ProjectList[index+1:]...)
+
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+
 // ADDITIONAL FUNCTION
 
 // GET DURATION
@@ -276,7 +259,7 @@ func GetDuration(startDate string, endDate string) string {
 	return duration
 }
 
-// FORMAT DATE
+// CHANGE DATE FORMAT
 func FormatDate(InputDate string) string {
 
 	layout := "2006-01-02"
@@ -287,7 +270,7 @@ func FormatDate(InputDate string) string {
 	return Formated
 }
 
-// RETURN DATE FORMAT BEFORE EDIT
+// RETURN DATE FORMAT
 func ReturnDate(InputDate string) string {
 
 	layout := "02 January 2006"
