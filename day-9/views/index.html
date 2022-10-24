@@ -122,7 +122,7 @@
                 <div class="project-content row p-5 gap-3 justify-content-center">
 
                     <!-- DYNAMIC CONTENT -->
-                    {{range $index, $data := .ProjectList}}
+                    {{range $index, $data := .renderData}}
                     <div class="project-item card shadow p-2">
                         <img src="../public/images/img-template-1.jpg" alt="" height="250" class="card-img">
                         <div class="card-body overflow-hidden" style="height: 195px;">

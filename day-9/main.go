@@ -84,7 +84,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rows, _ := connection.Conn.Query(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDuration", "ProjectDescription", "ProjectTechnologies" FROM public.tb_project`)
-
+	var result []Project
 	for rows.Next() {
 
 		var item = Project{}
@@ -96,12 +96,11 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		ProjectList = append(ProjectList, item)
-		fmt.Println(item)
+		result = append(result, item)
 	}
 
 	response := map[string]interface{}{
-		"ProjectList": ProjectList,
+		"renderData": result,
 	}
 
 	w.WriteHeader(http.StatusOK)
