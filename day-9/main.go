@@ -40,7 +40,7 @@ func main() {
 	// ROUTE RENDER HTML
 	route.HandleFunc("/", HomePage).Methods("GET")
 	route.HandleFunc("/contact", ContactPage).Methods("GET")
-	route.HandleFunc("/project", CreateProjectPage).Methods("GET")
+	route.HandleFunc("/project", ProjectPage).Methods("GET")
 	route.HandleFunc("/detail-project/{index}", ProjectDetail).Methods("GET")
 
 	// CREATE PROJECT
@@ -106,7 +106,7 @@ func ContactPage(w http.ResponseWriter, r *http.Request) {
 }
 
 // RENDER PROJECT PAGE
-func CreateProjectPage(w http.ResponseWriter, r *http.Request) {
+func ProjectPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	tmpl, err := template.ParseFiles("views/project.html")

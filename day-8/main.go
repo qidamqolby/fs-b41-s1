@@ -51,7 +51,7 @@ func main() {
 	// ROUTE RENDER HTML
 	route.HandleFunc("/", HomePage).Methods("GET")
 	route.HandleFunc("/contact", ContactPage).Methods("GET")
-	route.HandleFunc("/project", CreateProjectPage).Methods("GET")
+	route.HandleFunc("/project", ProjectPage).Methods("GET")
 	route.HandleFunc("/detail-project/{index}", ProjectDetail).Methods("GET")
 
 	// CREATE PROJECT
@@ -100,8 +100,8 @@ func ContactPage(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
-// RENDER ADD PROJECT PAGE
-func CreateProjectPage(w http.ResponseWriter, r *http.Request) {
+// RENDER PROJECT PAGE
+func ProjectPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	tmpl, err := template.ParseFiles("views/project.html")
@@ -179,17 +179,7 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// DELETE PROJECT
-func DeleteProject(w http.ResponseWriter, r *http.Request) {
-
-	index, _ := strconv.Atoi(mux.Vars(r)["index"])
-
-	ProjectList = append(ProjectList[:index], ProjectList[index+1:]...)
-
-	http.Redirect(w, r, "/", http.StatusFound)
-}
-
-// GET PROJECT TO EDIT
+// UPDATE PROJECT
 func UpdateProject(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -222,6 +212,16 @@ func UpdateProject(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// DELETE PROJECT
+func DeleteProject(w http.ResponseWriter, r *http.Request) {
+
+	index, _ := strconv.Atoi(mux.Vars(r)["index"])
+
+	ProjectList = append(ProjectList[:index], ProjectList[index+1:]...)
+
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+
 // ADDITIONAL FUNCTION
 
 // GET DURATION
@@ -252,7 +252,7 @@ func GetDuration(startDate string, endDate string) string {
 	return duration
 }
 
-// FORMAT DATE
+// CHANGE DATE FORMAT
 func FormatDate(InputDate string) string {
 
 	layout := "2006-01-02"
@@ -263,7 +263,7 @@ func FormatDate(InputDate string) string {
 	return Formated
 }
 
-// RETURN DATE FORMAT BEFORE EDIT
+// RETURN DATE FORMAT
 func ReturnDate(InputDate string) string {
 
 	layout := "02 January 2006"
