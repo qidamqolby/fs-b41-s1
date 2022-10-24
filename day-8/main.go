@@ -174,7 +174,6 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ProjectList = append(ProjectList, newProject)
-		fmt.Println(newProject)
 
 		http.Redirect(w, r, "/", http.StatusMovedPermanently)
 	}
