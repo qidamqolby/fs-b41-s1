@@ -306,7 +306,7 @@ func GetDuration(startDate time.Time, endDate time.Time) string {
 	if margin >= 30 {
 		if (margin / 30) == 1 {
 			duration = "1 Month"
-		} else if (margin/30) <= 12 && (margin/30) > 1 {
+		} else {
 			duration = strconv.Itoa(int(margin/30)) + " Months"
 		}
 	} else {
