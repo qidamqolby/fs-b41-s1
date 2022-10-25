@@ -75,7 +75,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		var renderData []Project
 		item := Project{}
 		// GET ALL PROJECTS FROM POSTGRESQL
-		rows, _ := connection.Conn.Query(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDescription", "ProjectTechnologies", "ProjectImage" FROM public.tb_project`)
+		rows, _ := connection.Conn.Query(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDescription", "ProjectTechnologies", "ProjectImage" FROM public.tb_project ORDER by "ID" DESC`)
 		// PARSE PROJECT
 		for rows.Next() {
 			// CONNECT EACH ITEM WITH STRUCT
