@@ -15,14 +15,16 @@ import (
 
 // STRUCT TEMPLATE
 type Project struct {
-	ID                  int
-	ProjectName         string
-	ProjectStartDate    string
-	ProjectEndDate      string
-	ProjectDuration     string
-	ProjectDescription  string
-	ProjectTechnologies []string
-	ProjectImage        string
+	ID                     int
+	ProjectName            string
+	ProjectStartDate       time.Time
+	ProjectEndDate         time.Time
+	ProjectStartDateString string
+	ProjectEndDateString   string
+	ProjectDuration        string
+	ProjectDescription     string
+	ProjectTechnologies    []string
+	ProjectImage           string
 }
 
 // MAIN
@@ -70,20 +72,28 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("message : " + err.Error()))
 		return
 	} else {
-		// GET ALL PROJECTS FROM POSTGRESQL
-		rows, _ := connection.Conn.Query(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDuration", "ProjectDescription", "ProjectTechnologies", "ProjectImage" FROM public.tb_project`)
 		var renderData []Project
+		item := Project{}
+		// GET ALL PROJECTS FROM POSTGRESQL
+		rows, _ := connection.Conn.Query(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDescription", "ProjectTechnologies", "ProjectImage" FROM public.tb_project`)
 		// PARSE PROJECT
 		for rows.Next() {
-
-			item := Project{}
-
-			err := rows.Scan(&item.ID, &item.ProjectName, &item.ProjectStartDate, &item.ProjectEndDate, &item.ProjectDuration, &item.ProjectDescription, &item.ProjectTechnologies, &item.ProjectImage)
+			// CONNECT EACH ITEM WITH STRUCT
+			err := rows.Scan(&item.ID, &item.ProjectName, &item.ProjectStartDate, &item.ProjectEndDate, &item.ProjectDescription, &item.ProjectTechnologies, &item.ProjectImage)
 			//ERROR HANDLING GET PROJECTS FROM POSTGRESQL
 			if err != nil {
 				fmt.Println(err.Error())
 				return
 			} else {
+				// PARSING DATE
+				item := Project{
+					ID:                  item.ID,
+					ProjectName:         item.ProjectName,
+					ProjectDuration:     GetDuration(item.ProjectStartDate, item.ProjectEndDate),
+					ProjectDescription:  item.ProjectDescription,
+					ProjectTechnologies: item.ProjectTechnologies,
+					ProjectImage:        item.ProjectImage,
+				}
 				renderData = append(renderData, item)
 			}
 		}
@@ -140,13 +150,24 @@ func ProjectDetail(w http.ResponseWriter, r *http.Request) {
 		ID, _ := strconv.Atoi(mux.Vars(r)["id"])
 		renderDetail := Project{}
 		// GET PROJECT BY ID FROM POSTGRESQL
-		err = connection.Conn.QueryRow(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDuration", "ProjectDescription", "ProjectTechnologies", "ProjectImage"
-		FROM public.tb_project WHERE "ID" = $1`, ID).Scan(&renderDetail.ID, &renderDetail.ProjectName, &renderDetail.ProjectStartDate, &renderDetail.ProjectEndDate, &renderDetail.ProjectDuration, &renderDetail.ProjectDescription, &renderDetail.ProjectTechnologies, &renderDetail.ProjectImage)
+		err = connection.Conn.QueryRow(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDescription", "ProjectTechnologies", "ProjectImage"
+		FROM public.tb_project WHERE "ID" = $1`, ID).Scan(&renderDetail.ID, &renderDetail.ProjectName, &renderDetail.ProjectStartDate, &renderDetail.ProjectEndDate, &renderDetail.ProjectDescription, &renderDetail.ProjectTechnologies, &renderDetail.ProjectImage)
 		// ERROR HANDLING GET PROJECT DATA BY ID
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("message : " + err.Error()))
 		} else {
+			//PARSING DATE
+			renderDetail := Project{
+				ID:                     renderDetail.ID,
+				ProjectName:            renderDetail.ProjectName,
+				ProjectStartDateString: FormatDate(renderDetail.ProjectStartDate),
+				ProjectEndDateString:   FormatDate(renderDetail.ProjectEndDate),
+				ProjectDuration:        GetDuration(renderDetail.ProjectStartDate, renderDetail.ProjectEndDate),
+				ProjectDescription:     renderDetail.ProjectDescription,
+				ProjectTechnologies:    renderDetail.ProjectTechnologies,
+				ProjectImage:           renderDetail.ProjectImage,
+			}
 			response := map[string]interface{}{
 				"renderDetail": renderDetail,
 			}
@@ -168,23 +189,25 @@ func EditProject(w http.ResponseWriter, r *http.Request) {
 		return
 	} else {
 		ID, _ := strconv.Atoi(mux.Vars(r)["id"])
-		renderData := Project{}
+		updateData := Project{}
 		// GET PROJECT BY ID FROM POSTGRESQL
-		err = connection.Conn.QueryRow(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDescription", "ProjectTechnologies", "ProjectImage" FROM public.tb_project WHERE "ID" = $1`, ID).Scan(&renderData.ID, &renderData.ProjectName, &renderData.ProjectStartDate, &renderData.ProjectEndDate, &renderData.ProjectDescription, &renderData.ProjectTechnologies, &renderData.ProjectImage)
+		err = connection.Conn.QueryRow(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDescription", "ProjectTechnologies", "ProjectImage" FROM public.tb_project WHERE "ID" = $1`, ID).Scan(&updateData.ID, &updateData.ProjectName, &updateData.ProjectStartDate, &updateData.ProjectEndDate, &updateData.ProjectDescription, &updateData.ProjectTechnologies, &updateData.ProjectImage)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("message : " + err.Error()))
 			return
 		}
-		updateData := Project{
-			ID:                  renderData.ID,
-			ProjectName:         renderData.ProjectName,
-			ProjectStartDate:    ReturnDate(renderData.ProjectStartDate),
-			ProjectEndDate:      ReturnDate(renderData.ProjectEndDate),
-			ProjectDescription:  renderData.ProjectDescription,
-			ProjectTechnologies: renderData.ProjectTechnologies,
-			ProjectImage:        renderData.ProjectImage,
+
+		updateData = Project{
+			ID:                     updateData.ID,
+			ProjectName:            updateData.ProjectName,
+			ProjectStartDateString: ReturnDate(updateData.ProjectStartDate),
+			ProjectEndDateString:   ReturnDate(updateData.ProjectEndDate),
+			ProjectDescription:     updateData.ProjectDescription,
+			ProjectTechnologies:    updateData.ProjectTechnologies,
+			ProjectImage:           updateData.ProjectImage,
 		}
+
 		response := map[string]interface{}{
 			"updateData": updateData,
 		}
@@ -192,7 +215,6 @@ func EditProject(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		tmpl.Execute(w, response)
 	}
-
 }
 
 // ==================================================
@@ -206,20 +228,16 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		StartDate := r.PostForm.Get("date-start")
-		EndDate := r.PostForm.Get("date-end")
-
 		ProjectName := r.PostForm.Get("project-name")
-		ProjectStartDate := FormatDate(StartDate)
-		ProjectEndDate := FormatDate(EndDate)
-		ProjectDuration := GetDuration(StartDate, EndDate)
+		ProjectStartDate := r.PostForm.Get("date-start")
+		ProjectEndDate := r.PostForm.Get("date-end")
 		ProjectDescription := r.PostForm.Get("project-description")
 		ProjectTechnologies := []string{r.PostForm.Get("nodejs"), r.PostForm.Get("reactjs"), r.PostForm.Get("golang"), r.PostForm.Get("typescript")}
 		ProjectImage := r.PostForm.Get("upload-image")
 
 		// INSERT PROJECT TO POSTGRESQL
-		_, err = connection.Conn.Exec(context.Background(), `INSERT INTO public.tb_project( "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDuration", "ProjectDescription", "ProjectTechnologies", "ProjectImage")
-			VALUES ( $1, $2, $3, $4, $5, $6, $7)`, ProjectName, ProjectStartDate, ProjectEndDate, ProjectDuration, ProjectDescription, ProjectTechnologies, ProjectImage)
+		_, err = connection.Conn.Exec(context.Background(), `INSERT INTO public.tb_project( "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDescription", "ProjectTechnologies", "ProjectImage")
+			VALUES ( $1, $2, $3, $4, $5, $6)`, ProjectName, ProjectStartDate, ProjectEndDate, ProjectDescription, ProjectTechnologies, ProjectImage)
 		// ERROR HANDLING INSERT PROJECT TO POSTGRESQL
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -238,22 +256,17 @@ func UpdateProject(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	} else {
 		ID, _ := strconv.Atoi(mux.Vars(r)["id"])
-
-		StartDate := r.PostForm.Get("date-start")
-		EndDate := r.PostForm.Get("date-end")
-
 		ProjectName := r.PostForm.Get("project-name")
-		ProjectStartDate := FormatDate(StartDate)
-		ProjectEndDate := FormatDate(EndDate)
-		ProjectDuration := GetDuration(StartDate, EndDate)
+		ProjectStartDate := r.PostForm.Get("date-start")
+		ProjectEndDate := r.PostForm.Get("date-end")
 		ProjectDescription := r.PostForm.Get("project-description")
 		ProjectTechnologies := []string{r.PostForm.Get("nodejs"), r.PostForm.Get("reactjs"), r.PostForm.Get("golang"), r.PostForm.Get("typescript")}
 		ProjectImage := r.PostForm.Get("upload-image")
 
 		// UPDATE PROJECT TO POSTGRESQL
 		_, err = connection.Conn.Exec(context.Background(), `UPDATE public.tb_project
-		SET "ProjectName"=$1, "ProjectStartDate"=$2, "ProjectEndDate"=$3, "ProjectDuration"=$4, "ProjectDescription"=$5, "ProjectTechnologies"=$6, "ProjectImage"=$7
-		WHERE "ID"=$8`, ProjectName, ProjectStartDate, ProjectEndDate, ProjectDuration, ProjectDescription, ProjectTechnologies, ProjectImage, ID)
+		SET "ProjectName"=$1, "ProjectStartDate"=$2, "ProjectEndDate"=$3, "ProjectDescription"=$4, "ProjectTechnologies"=$5, "ProjectImage"=$6
+		WHERE "ID"=$7`, ProjectName, ProjectStartDate, ProjectEndDate, ProjectDescription, ProjectTechnologies, ProjectImage, ID)
 		// ERROR HANDLING INSERT PROJECT TO POSTGRESQL
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -280,23 +293,20 @@ func DeleteProject(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
+// ==================================================
 // ADDITIONAL FUNCTION
+// ==================================================
 
 // GET DURATION
-func GetDuration(startDate string, endDate string) string {
+func GetDuration(startDate time.Time, endDate time.Time) string {
 
-	layout := "2006-01-02"
-
-	date1, _ := time.Parse(layout, startDate)
-	date2, _ := time.Parse(layout, endDate)
-
-	margin := date2.Sub(date1).Hours() / 24
+	margin := endDate.Sub(startDate).Hours() / 24
 	var duration string
 
 	if margin >= 30 {
-		if (margin / 30) <= 1 {
+		if (margin / 30) == 1 {
 			duration = "1 Month"
-		} else {
+		} else if (margin/30) <= 12 && (margin/30) > 1 {
 			duration = strconv.Itoa(int(margin/30)) + " Months"
 		}
 	} else {
@@ -311,23 +321,17 @@ func GetDuration(startDate string, endDate string) string {
 }
 
 // CHANGE DATE FORMAT
-func FormatDate(InputDate string) string {
+func FormatDate(InputDate time.Time) string {
 
-	layout := "2006-01-02"
-	t, _ := time.Parse(layout, InputDate)
-
-	Formated := t.Format("02 January 2006")
+	Formated := InputDate.Format("02 January 2006")
 
 	return Formated
 }
 
 // RETURN DATE FORMAT
-func ReturnDate(InputDate string) string {
+func ReturnDate(InputDate time.Time) string {
 
-	layout := "02 January 2006"
-	t, _ := time.Parse(layout, InputDate)
-
-	Formated := t.Format("2006-01-02")
+	Formated := InputDate.Format("2006-01-02")
 
 	return Formated
 }
