@@ -25,9 +25,6 @@ type Project struct {
 	ProjectImage        string
 }
 
-// LOCAL DATABASE
-var ProjectList = []Project{}
-
 // MAIN
 func main() {
 	route := mux.NewRouter()
@@ -169,32 +166,32 @@ func EditProject(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("message : " + err.Error()))
 		return
-	}
+	} else {
+		ID, _ := strconv.Atoi(mux.Vars(r)["id"])
+		renderData := Project{}
+		// GET PROJECT BY ID FROM POSTGRESQL
+		err = connection.Conn.QueryRow(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDescription", "ProjectTechnologies", "ProjectImage" FROM public.tb_project WHERE "ID" = $1`, ID).Scan(&renderData.ID, &renderData.ProjectName, &renderData.ProjectStartDate, &renderData.ProjectEndDate, &renderData.ProjectDescription, &renderData.ProjectTechnologies, &renderData.ProjectImage)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("message : " + err.Error()))
+			return
+		}
+		updateData := Project{
+			ID:                  renderData.ID,
+			ProjectName:         renderData.ProjectName,
+			ProjectStartDate:    ReturnDate(renderData.ProjectStartDate),
+			ProjectEndDate:      ReturnDate(renderData.ProjectEndDate),
+			ProjectDescription:  renderData.ProjectDescription,
+			ProjectTechnologies: renderData.ProjectTechnologies,
+			ProjectImage:        renderData.ProjectImage,
+		}
+		response := map[string]interface{}{
+			"updateData": updateData,
+		}
 
-	ID, _ := strconv.Atoi(mux.Vars(r)["id"])
-	renderData := Project{}
-	// GET PROJECT BY ID FROM POSTGRESQL
-	err = connection.Conn.QueryRow(context.Background(), `SELECT "ID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectDescription", "ProjectTechnologies", "ProjectImage" FROM public.tb_project WHERE "ID" = $1`, ID).Scan(&renderData.ID, &renderData.ProjectName, &renderData.ProjectStartDate, &renderData.ProjectEndDate, &renderData.ProjectDescription, &renderData.ProjectTechnologies, &renderData.ProjectImage)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("message : " + err.Error()))
-		return
+		w.WriteHeader(http.StatusOK)
+		tmpl.Execute(w, response)
 	}
-	updateData := Project{
-		ID:                  renderData.ID,
-		ProjectName:         renderData.ProjectName,
-		ProjectStartDate:    ReturnDate(renderData.ProjectStartDate),
-		ProjectEndDate:      ReturnDate(renderData.ProjectEndDate),
-		ProjectDescription:  renderData.ProjectDescription,
-		ProjectTechnologies: renderData.ProjectTechnologies,
-		ProjectImage:        renderData.ProjectImage,
-	}
-	response := map[string]interface{}{
-		"updateData": updateData,
-	}
-
-	w.WriteHeader(http.StatusOK)
-	tmpl.Execute(w, response)
 
 }
 
@@ -235,6 +232,37 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 
 // UPDATE PROJECT
 func UpdateProject(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		ID, _ := strconv.Atoi(mux.Vars(r)["id"])
+
+		StartDate := r.PostForm.Get("date-start")
+		EndDate := r.PostForm.Get("date-end")
+
+		ProjectName := r.PostForm.Get("project-name")
+		ProjectStartDate := FormatDate(StartDate)
+		ProjectEndDate := FormatDate(EndDate)
+		ProjectDuration := GetDuration(StartDate, EndDate)
+		ProjectDescription := r.PostForm.Get("project-description")
+		ProjectTechnologies := []string{r.PostForm.Get("nodejs"), r.PostForm.Get("reactjs"), r.PostForm.Get("golang"), r.PostForm.Get("typescript")}
+		ProjectImage := r.PostForm.Get("upload-image")
+
+		// UPDATE PROJECT TO POSTGRESQL
+		_, err = connection.Conn.Exec(context.Background(), `UPDATE public.tb_project
+		SET "ProjectName"=$1, "ProjectStartDate"=$2, "ProjectEndDate"=$3, "ProjectDuration"=$4, "ProjectDescription"=$5, "ProjectTechnologies"=$6, "ProjectImage"=$7
+		WHERE "ID"=$8`, ProjectName, ProjectStartDate, ProjectEndDate, ProjectDuration, ProjectDescription, ProjectTechnologies, ProjectImage, ID)
+		// ERROR HANDLING INSERT PROJECT TO POSTGRESQL
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("message : " + err.Error()))
+			return
+		}
+		http.Redirect(w, r, "/", http.StatusMovedPermanently)
+
+	}
 }
 
 // DELETE PROJECT
