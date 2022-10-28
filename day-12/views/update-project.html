@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Project - Personal Web</title>
+
+    <!-- BOOTSTRAP CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- GOOGLE FONT - POPPINS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../public/css/main.css" />
+</head>
+
+<body>
+    <!-- NAVIGATION -->
+    <header class="navbar navbar-expand-lg bg-light fixed-top">
+        <nav class="container">
+            <a href="/" class="navbar-brand">
+                <img src="../public/images/logo.png" alt="website logo" width="70" class="dumbways-logo" />
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item m-2">
+                        <a href="/" class="nav-link fw-bold">Home</a>
+                    </li>
+                    {{if .Data.IsLogin}}
+                    <li class="nav-item m-2">
+                        <a href="/project" class="nav-link fw-bold">Add Project</a>
+                    </li>
+                    {{end}}
+                </ul>
+                <ul class="navbar-nav">
+                    {{if .Data.IsLogin}}
+                    <li class="nav-item m-2">
+                        <a href="/" class="nav-link fw-bold">Hello, {{.Data.UserName}}</a>
+                    </li>
+                    <li class="nav-item m-2">
+                        <a href="/logout" class="nav-link fw-bold">Logout</a>
+                    </li>
+                    {{else}}
+                    <li class="nav-item m-2">
+                        <a href="/register" class="nav-link fw-bold">Register</a>
+                    </li>
+                    <li class="nav-item m-2">
+                        <a href="/login" class="nav-link fw-bold">Login</a>
+                    </li>
+                    {{end}}
+                    <li class="nav-item m-2">
+                        <a href="/contact" class="btn btn-dark fw-bold ms-auto">Contact Me</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- PROJECT SECTION -->
+    {{if eq .Data.UserID .updateData.UserID}}
+    <section id="project-section">
+        <form action="/updated-project/{{.updateData.ID}}" method="post" id="project-form"
+            class="project-form container" enctype="multipart/form-data">
+            <h2 class="text-center fw-bold">ADD MY PROJECT</h2>
+            <div class="input row my-3">
+                <div class="col-md-12">
+                    <label for="project-name" class="form-label fw-bold">Project Name</label>
+                    <input type="text" class="form-control" id="project-name" name="project-name"
+                        value="{{.updateData.ProjectName}}" required />
+                </div>
+            </div>
+            <div class="input row my-3">
+                <div class="col-md-6">
+                    <label for="date-start" class="form-label fw-bold">Start Date</label>
+                    <input type="date" class="form-control" id="date-start" name="date-start"
+                        value="{{.updateData.ProjectStartDateString}}" required />
+                </div>
+                <div class="col-md-6">
+                    <label for="date-end" class="form-label fw-bold">End Date</label>
+                    <input type="date" class="form-control" id="date-end" name="date-end"
+                        value="{{.updateData.ProjectEndDateString}}" required />
+                </div>
+            </div>
+            <div class="input row my-3">
+                <div class="col-md-12">
+                    <label for="project-description" class="form-label fw-bold">Description</label>
+                    <textarea class="form-control" id="project-description" cols="30" rows="10" style="resize: none"
+                        name="project-description">
+{{.updateData.ProjectDescription}}</textarea>
+                </div>
+            </div>
+            <div class="input row my-3">
+                <div class="col-md-12">
+                    <label for="#" class="form-label fw-bold">Technologies</label>
+                </div>
+            </div>
+            <div class="input row m-3">
+                <div class="col-md-4">
+                    <input class="form-check-input" type="checkbox" id="nodejs" name="nodejs" value="checked" {{(index
+                        .updateData.ProjectTechnologies 0)}} />
+                    <label class="form-check-label" for="node-js">
+                        Node JS
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <input class="form-check-input" type="checkbox" id="reactjs" name="reactjs" value="checked" {{(index
+                        .updateData.ProjectTechnologies 1)}} />
+                    <label class="form-check-label" for="reactjs">
+                        React JS
+                    </label>
+                </div>
+            </div>
+            <div class="input row m-3">
+                <div class="col-md-4">
+                    <input class="form-check-input" type="checkbox" id="golang" name="golang" value="checked" {{(index
+                        .updateData.ProjectTechnologies 2)}} />
+                    <label class="form-check-label" for="golang">
+                        Go
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <input class="form-check-input" type="checkbox" id="typescript" name="typescript" value="checked"
+                        {{(index .updateData.ProjectTechnologies 3)}} />
+                    <label class="form-check-label" for="typescript">
+                        TypeScript
+                    </label>
+                </div>
+            </div>
+            <div class="input row my-3">
+                <div class="col-md-12">
+                    <label for="upload-image" class="form-label fw-bold">Upload Image</label>
+                    <div class="input-group">
+                        <input type="file" class="form-control" name="upload-image" id="upload-image"
+                            value="{{.updateData.ProjectImage}}" aria-label="Upload" accept="image/*" required />
+                        <span class="input-group-text"><i class="fa-solid fa-paperclip"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input row my-5">
+                <div class="col-md-12">
+                    <button class="btn btn-dark rounded-5 px-4 fw-bold float-end">
+                        submit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section>
+    {{else}}
+    <section id="return-to-home">
+        <div class="return-home container bg-white rounded">
+            <div class="row return-content">
+                <div class="col-12 p-5">
+                    <p>Please <a href="/login">Login</a> to access this page</p>
+                    <a href="/">Return to Home</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {{end}}
+
+    <!-- BOOTSTRAP JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
