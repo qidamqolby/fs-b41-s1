@@ -638,10 +638,10 @@ func Registered(w http.ResponseWriter, r *http.Request) {
 			session, _ := store.Get(r, "SESSION_KEY")
 
 			session.Values["IsLogin"] = false
-			session.AddFlash("Email is Registered! Please Login", "message")
+			session.AddFlash("Email is registered! Please login", "message")
 			session.Save(r, w)
 
-			http.Redirect(w, r, "/register", http.StatusMovedPermanently)
+			http.Redirect(w, r, "/login", http.StatusMovedPermanently)
 		} else {
 			var store = sessions.NewCookieStore([]byte("SESSION_KEY"))
 			session, _ := store.Get(r, "SESSION_KEY")
@@ -722,7 +722,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("SESSION_KEY"))
 	session, _ := store.Get(r, "SESSION_KEY")
 	// REMOVE SESSION
-	session.Options.MaxAge = 1
+	session.Options.MaxAge = -1
 	// ADDING LOGIN STATUS
 	session.Values["IsLogin"] = false
 	session.Values["UserID"] = 0
