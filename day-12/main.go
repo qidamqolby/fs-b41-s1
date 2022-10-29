@@ -536,17 +536,11 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 			VALUES ( $1, $2, $3, $4, $5, $6, $7)`, ProjectName, ProjectStartDate, ProjectEndDate, ProjectDescription, ProjectTechnologies, ProjectImage, UserID)
 		// ERROR HANDLING INSERT PROJECT TO POSTGRESQL
 		if err != nil {
-			var store = sessions.NewCookieStore([]byte("SESSION_KEY"))
-			session, _ := store.Get(r, "SESSION_KEY")
-
 			session.AddFlash("Cannot add project", "message")
 			session.Save(r, w)
 
 			http.Redirect(w, r, "/", http.StatusMovedPermanently)
 		} else {
-			var store = sessions.NewCookieStore([]byte("SESSION_KEY"))
-			session, _ := store.Get(r, "SESSION_KEY")
-
 			session.AddFlash("Project added", "message")
 			session.Save(r, w)
 
@@ -589,17 +583,11 @@ func UpdateProject(w http.ResponseWriter, r *http.Request) {
 		SET "ProjectName"=$1, "ProjectStartDate"=$2, "ProjectEndDate"=$3, "ProjectDescription"=$4, "ProjectTechnologies"=$5, "ProjectImage" =$6 WHERE "ID"=$7`, ProjectName, ProjectStartDate, ProjectEndDate, ProjectDescription, ProjectTechnologies, ProjectImage, ID)
 		// ERROR HANDLING INSERT PROJECT TO POSTGRESQL
 		if err != nil {
-			var store = sessions.NewCookieStore([]byte("SESSION_KEY"))
-			session, _ := store.Get(r, "SESSION_KEY")
-
 			session.AddFlash("Cannot update project", "message")
 			session.Save(r, w)
 
 			http.Redirect(w, r, "/", http.StatusMovedPermanently)
 		} else {
-			var store = sessions.NewCookieStore([]byte("SESSION_KEY"))
-			session, _ := store.Get(r, "SESSION_KEY")
-
 			session.AddFlash("Project updated", "message")
 			session.Save(r, w)
 
@@ -617,9 +605,6 @@ func DeleteProject(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "SESSION_KEY")
 	// CHECK LOGIN STATUS
 	if session.Values["IsLogin"] != true {
-		var store = sessions.NewCookieStore([]byte("SESSION_KEY"))
-		session, _ := store.Get(r, "SESSION_KEY")
-
 		session.AddFlash("Please login to continue", "message")
 		session.Save(r, w)
 		http.Redirect(w, r, "/login", http.StatusMovedPermanently)
@@ -628,17 +613,11 @@ func DeleteProject(w http.ResponseWriter, r *http.Request) {
 		_, err := connection.Conn.Exec(context.Background(), `DELETE FROM public.tb_project WHERE "ID" = $1`, ID)
 		// ERROR HANDLING DELETE PROJECT AT POSTGRESQL
 		if err != nil {
-			var store = sessions.NewCookieStore([]byte("SESSION_KEY"))
-			session, _ := store.Get(r, "SESSION_KEY")
-
 			session.AddFlash("Cannot delete project", "message")
 			session.Save(r, w)
 
 			http.Redirect(w, r, "/", http.StatusMovedPermanently)
 		} else {
-			var store = sessions.NewCookieStore([]byte("SESSION_KEY"))
-			session, _ := store.Get(r, "SESSION_KEY")
-
 			session.AddFlash("Project deleted", "message")
 			session.Save(r, w)
 
