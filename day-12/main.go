@@ -157,36 +157,71 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 
 		var renderData []Project
 		item := Project{}
-		// GET ALL PROJECTS FROM POSTGRESQL
-		rows, _ := connection.Conn.Query(context.Background(), `SELECT * FROM public.tb_project WHERE "UserID" = $1`, Data.UserID)
-		// PARSE PROJECT
-		for rows.Next() {
-			// CONNECT EACH ITEM WITH STRUCT
-			err := rows.Scan(&item.ID, &item.ProjectName, &item.ProjectStartDate, &item.ProjectEndDate, &item.ProjectDescription, &item.ProjectTechnologies, &item.ProjectImage, &item.UserID)
-			//ERROR HANDLING GET PROJECTS FROM POSTGRESQL
-			if err != nil {
-				fmt.Println(err.Error())
-				return
-			} else {
-				// PARSING DATE
-				item := Project{
-					ID:                  item.ID,
-					ProjectName:         item.ProjectName,
-					ProjectDuration:     GetDuration(item.ProjectStartDate, item.ProjectEndDate),
-					ProjectDescription:  item.ProjectDescription,
-					ProjectTechnologies: item.ProjectTechnologies,
-					ProjectImage:        item.ProjectImage,
-					UserID:              item.UserID,
+
+		if !Data.IsLogin {
+			// GET ALL PROJECTS DATA FROM POSTGRESQL
+			rows, _ := connection.Conn.Query(context.Background(), `SELECT * FROM public.tb_project`)
+			// PARSE PROJECT
+			for rows.Next() {
+				// CONNECT EACH ITEM WITH STRUCT
+				err := rows.Scan(&item.ID, &item.ProjectName, &item.ProjectStartDate, &item.ProjectEndDate, &item.ProjectDescription, &item.ProjectTechnologies, &item.ProjectImage, &item.UserID)
+				//ERROR HANDLING GET PROJECTS FROM POSTGRESQL
+				if err != nil {
+					fmt.Println(err.Error())
+					return
+				} else {
+					// PARSING DATE
+					item := Project{
+						ID:                  item.ID,
+						ProjectName:         item.ProjectName,
+						ProjectDuration:     GetDuration(item.ProjectStartDate, item.ProjectEndDate),
+						ProjectDescription:  item.ProjectDescription,
+						ProjectTechnologies: item.ProjectTechnologies,
+						ProjectImage:        item.ProjectImage,
+						UserID:              item.UserID,
+					}
+					renderData = append(renderData, item)
 				}
-				renderData = append(renderData, item)
 			}
+			response := map[string]interface{}{
+				"renderData": renderData,
+				"Data":       Data,
+			}
+			w.WriteHeader(http.StatusOK)
+			tmpl.Execute(w, response)
+		} else {
+			// GET USER PROJECTS FROM POSTGRESQL
+			rows, _ := connection.Conn.Query(context.Background(), `SELECT * FROM public.tb_project WHERE "UserID" = $1`, Data.UserID)
+			// PARSE PROJECT
+			for rows.Next() {
+				// CONNECT EACH ITEM WITH STRUCT
+				err := rows.Scan(&item.ID, &item.ProjectName, &item.ProjectStartDate, &item.ProjectEndDate, &item.ProjectDescription, &item.ProjectTechnologies, &item.ProjectImage, &item.UserID)
+				//ERROR HANDLING GET PROJECTS FROM POSTGRESQL
+				if err != nil {
+					fmt.Println(err.Error())
+					return
+				} else {
+					// PARSING DATE
+					item := Project{
+						ID:                  item.ID,
+						ProjectName:         item.ProjectName,
+						ProjectDuration:     GetDuration(item.ProjectStartDate, item.ProjectEndDate),
+						ProjectDescription:  item.ProjectDescription,
+						ProjectTechnologies: item.ProjectTechnologies,
+						ProjectImage:        item.ProjectImage,
+						UserID:              item.UserID,
+					}
+					renderData = append(renderData, item)
+				}
+			}
+			response := map[string]interface{}{
+				"renderData": renderData,
+				"Data":       Data,
+			}
+			w.WriteHeader(http.StatusOK)
+			tmpl.Execute(w, response)
 		}
-		response := map[string]interface{}{
-			"renderData": renderData,
-			"Data":       Data,
-		}
-		w.WriteHeader(http.StatusOK)
-		tmpl.Execute(w, response)
+
 	}
 }
 

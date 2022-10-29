@@ -183,6 +183,42 @@
                 </div>
             </div>
         </section>
+        {{else}}
+        <section id="project-section">
+            <div class="project-container container-fluid bg-white p-5">
+                <h2 class="text-center">My Project</h2>
+                <div class="project-content row p-5 gap-3 justify-content-center">
+                    <!-- DYNAMIC CONTENT -->
+                    {{range $index, $data := .renderData}}
+                    <div class="project-item card shadow p-2">
+                        <img src="../uploads/{{$data.ProjectImage}}" alt="" height="250" class="card-img">
+                        <div class="card-body overflow-hidden" style="height: 195px;">
+                            <a href="/detail-project/{{$data.ID}}" class="nav-link">
+                                <h5 class="card-title fw-semibold">{{$data.ProjectName}}</h5>
+                            </a>
+                            <h6 class="card-subtitle text-muted mb-3">Duration: {{$data.ProjectDuration}}</h6>
+                            <p class="card-text text-justify">{{$data.ProjectDescription}}</p>
+                        </div>
+                        <div class="card-body d-flex justify-content-start gap-3" style="margin-bottom: 71px;">
+                            <!-- ITEM TECHNOLOGIES -->
+                            {{if eq (index $data.ProjectTechnologies 0) "checked"}}
+                            <img src="../public/icons/nodejs.svg" alt="nodejs" style="width: 32px;">
+                            {{end}}
+                            {{if eq (index $data.ProjectTechnologies 1) "checked"}}
+                            <img src="../public/icons/react-native.svg" alt="reactjs" style="width: 32px;">
+                            {{end}}
+                            {{if eq (index $data.ProjectTechnologies 2) "checked"}}
+                            <img src="../public/icons/golang.svg" alt="golang" style="width: 32px;">
+                            {{end}}
+                            {{if eq (index $data.ProjectTechnologies 3) "checked"}}
+                            <img src="../public/icons/typescript.svg" alt="typescript" style="width: 32px;">
+                            {{end}}
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+        </section>
         {{end}}
     </main>
 
