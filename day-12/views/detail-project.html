@@ -74,7 +74,6 @@
 
     <main>
         <!-- PROJECT DETAIL -->
-        {{if eq .Data.UserID .renderDetail.UserID}}
         <section id="detail-section">
             <div class="detail-container container">
                 <h2 class="text-center">{{.renderDetail.ProjectName}}</h2>
@@ -160,18 +159,6 @@
                 </div>
             </div>
         </section>
-        {{else}}
-        <section id="return-to-home">
-            <div class="return-home container bg-white rounded">
-                <div class="row return-content">
-                    <div class="col-12 p-5">
-                        <p>Please <a href="/login">Login</a> to access this page</p>
-                        <a href="/">Return to Home</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-        {{end}}
 
     </main>
 
