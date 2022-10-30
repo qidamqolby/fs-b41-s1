@@ -8,7 +8,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -578,8 +577,6 @@ func UpdateProject(w http.ResponseWriter, r *http.Request) {
 
 		dataContext := r.Context().Value("dataFile")
 		ProjectImage := dataContext.(string)
-		fmt.Println(ProjectImage)
-		fmt.Println(reflect.TypeOf(ProjectImage))
 
 		if ProjectImage == "empty" {
 			// UPDATE PROJECT TO POSTGRESQL
