@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -577,12 +578,21 @@ func UpdateProject(w http.ResponseWriter, r *http.Request) {
 
 		dataContext := r.Context().Value("dataFile")
 		ProjectImage := dataContext.(string)
+		fmt.Println(ProjectImage)
+		fmt.Println(reflect.TypeOf(ProjectImage))
 
-		// UPDATE PROJECT TO POSTGRESQL
-		_, err = connection.Conn.Exec(context.Background(), `UPDATE public.tb_project
+		if ProjectImage == "empty" {
+			// UPDATE PROJECT TO POSTGRESQL
+			_, err = connection.Conn.Exec(context.Background(), `UPDATE public.tb_project
+		SET "ProjectName"=$1, "ProjectStartDate"=$2, "ProjectEndDate"=$3, "ProjectDescription"=$4, "ProjectTechnologies"=$5 WHERE "ID"=$6`, ProjectName, ProjectStartDate, ProjectEndDate, ProjectDescription, ProjectTechnologies, ID)
+		} else {
+			// UPDATE PROJECT TO POSTGRESQL
+			_, err = connection.Conn.Exec(context.Background(), `UPDATE public.tb_project
 		SET "ProjectName"=$1, "ProjectStartDate"=$2, "ProjectEndDate"=$3, "ProjectDescription"=$4, "ProjectTechnologies"=$5, "ProjectImage" =$6 WHERE "ID"=$7`, ProjectName, ProjectStartDate, ProjectEndDate, ProjectDescription, ProjectTechnologies, ProjectImage, ID)
+		}
 		// ERROR HANDLING INSERT PROJECT TO POSTGRESQL
 		if err != nil {
+			fmt.Println(err)
 			session.AddFlash("Cannot update project", "message")
 			session.Save(r, w)
 

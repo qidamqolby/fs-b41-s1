@@ -13,6 +13,11 @@ import (
 func UploadFile(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		file, handler, err := r.FormFile("upload-image")
+		if handler == nil {
+			ctx := context.WithValue(r.Context(), "dataFile", "empty")
+			next.ServeHTTP(w, r.WithContext(ctx))
+			return
+		}
 		if err != nil {
 			fmt.Println(err)
 			json.NewEncoder(w).Encode("Error retrieving the File")
@@ -41,6 +46,7 @@ func UploadFile(next http.HandlerFunc) http.HandlerFunc {
 		filename := data[8:]
 
 		ctx := context.WithValue(r.Context(), "dataFile", filename)
+		fmt.Println(ctx)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
